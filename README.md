@@ -10,6 +10,13 @@ or
 yarn add react-native-atoz-listview
 ```
 
+# Demo
+
+| Platform | Android | iOS |
+|:--------:|:-------:|:---:|
+| Demo | ![Android](https://media.giphy.com/media/l44Qfj4tTid5Gm3i8/source.gif) | ![iOS](https://media.giphy.com/media/26BGFK79U8Rd7d5y8/source.gif) |
+
+
 # Following is the original readme
 
 A Listview with a sidebar to directly jump to sections.
