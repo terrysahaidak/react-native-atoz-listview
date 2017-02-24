@@ -16,14 +16,6 @@ yarn add react-native-atoz-listview
 |:--------:|:-------:|:---:|
 | Demo gif link | [Android](https://media.giphy.com/media/l44Qfj4tTid5Gm3i8/source.gif) | [iOS](https://media.giphy.com/media/26BGFK79U8Rd7d5y8/source.gif) |
 
-
-# Following is the original readme
-
-A Listview with a sidebar to directly jump to sections.
-Please file issues for missing features or bugs.
-I apologize for the bad name.
-
-
 ## Usage
 
 ```javascript
@@ -84,16 +76,10 @@ class MyScene extends Component {
           rowHeight={rowHeight}      // required number
           sectionHeaderHeight={40}   // required number
           /**
-          * Optional props:
-          * renderHeader              func
+          * Optional props: all props will passing to ListView
+          * you simple look at ListView official document
           * headerHeight              number
-          * renderFooter              func
           * footerHeigh               number
-          * renderSeparator           func
-          * renderSectionHeader       func
-          * onEndReached              func
-          * onEndReachedThreshold     number
-          * refreshControl            object
           * sectionListStyle          number|object
           * hideSectionList           bool
           * compareFunction           func

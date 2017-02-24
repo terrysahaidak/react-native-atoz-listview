@@ -165,16 +165,6 @@ export default class SelectableSectionsListView extends Component {
     );
   }
 
-  renderFooter() {
-    const Footer = this.props.footer;
-    return <Footer />;
-  }
-
-  renderHeader() {
-    const Header = this.props.header;
-    return <Header />;
-  }
-
   // renderRow(item, sectionId, index) {
   //   const RowComponent = this.props.renderRow;
   //   console.log(RowComponent);
@@ -245,29 +235,11 @@ export default class SelectableSectionsListView extends Component {
       dataSource = this.state.dataSource.cloneWithRowsAndSections(data, sections);
     }
 
-    const renderFooter = this.props.renderFooter ?
-      this.props.renderFooter :
-      this.renderFooter;
-
-    const renderHeader = this.props.renderHeader ?
-      this.props.renderHeader :
-      this.renderHeader;
-
-    const renderSeparator = this.props.renderSeparator ? this.props.renderSeparator : null;
-
     const props = merge({}, this.props, {
       onScroll: this.onScroll,
       onScrollAnimationEnd: this.onScrollAnimationEnd,
       dataSource,
-      renderFooter,
-      renderHeader,
-      renderRow: this.props.renderRow,
-      renderSeparator,
       renderSectionHeader,
-      enableEmptySections: this.props.enableEmptySections || false,
-      onEndReached: this.props.onEndReached,
-      onEndReachedThreshold: this.props.onEndReachedThreshold,
-      refreshControl: this.props.refreshControl,
     });
 
     props.style = void 0;
@@ -327,11 +299,6 @@ SelectableSectionsListView.propTypes = {
   onScrollToSection: PropTypes.func,
 
   /**
-   * The cell element to render for each row
-   */
-  renderRow: PropTypes.func.isRequired,
-
-  /**
    * A custom element to render for each section list item
    */
   renderSelectionList: PropTypes.func,
@@ -348,24 +315,9 @@ SelectableSectionsListView.propTypes = {
   headerHeight: PropTypes.number,
 
   /**
-   * A custom function to render as header
-   */
-  renderHeader: PropTypes.func,
-
-  /**
-   * A custom function to render as footer
-   */
-  renderFooter: PropTypes.func,
-
-  /**
    * footer height
    */
   footerHeight: PropTypes.number,
-
-  /**
-   * A custom function to render as row separator
-   */
-  renderSeparator: PropTypes.func,
 
   /**
    * An object to config contentOffset, work both Android/iOS
@@ -409,8 +361,4 @@ SelectableSectionsListView.propTypes = {
    * Styles to pass to the section list container
    */
   sectionListStyle: stylesheetProp,
-
-  onEndReached: PropTypes.func,
-  onEndReachedThreshold: PropTypes.number,
-  refreshControl: PropTypes.object,
 };
