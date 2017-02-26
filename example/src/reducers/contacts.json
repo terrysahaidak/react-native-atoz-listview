@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Anh Tuan Nguyen",
+        "status": "Good day",
+        "category": "A"
+    },
+    {
+        "name": "An Nguyen",
+        "status": "Xin chao",
+        "category": "A"
+    },
+    {
+        "name": "Binh Nguyen",
+        "status": "Hi! Whatsapp clone",
+        "category": "B"
+    },
+    {
+        "name": "Minh Phan",
+        "status": "Binh Minh Viet",
+        "category": "M"
+    },
+    {
+        "name": "Z Pham",
+        "status": "Test status only",
+        "category": "Z"
+    }
+]
