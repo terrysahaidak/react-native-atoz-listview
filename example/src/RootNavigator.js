@@ -34,4 +34,5 @@ const RootNavigator = TabNavigator({
         },
 
     });
+
 export default RootNavigator;

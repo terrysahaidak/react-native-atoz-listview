@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import AtoZListView from 'react-native-atoz-listview';
 import { contactFetch } from '../../actions';
 import ContactStyles from '../../constants/ContactStyles';
+import { Search } from '../../components';
 
 class Home extends Component {
 
@@ -62,6 +63,7 @@ class Home extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <Search />
                 <AtoZListView
                     enableEmptySections
                     data={this.props.contacts}

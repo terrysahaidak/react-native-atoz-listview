@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './Store';
-import RootNavigator from './RootNavigator';
+import AppNavigator from './AppNavigator';
 
-const App = () => {
-    return (
-        <Provider store={store}>
-            <RootNavigator />
-        </Provider>
-    );
-};
+class App extends Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <AppNavigator />
+            </Provider>
+        );
+    }
+}
 
 AppRegistry.registerComponent('example', () => App);

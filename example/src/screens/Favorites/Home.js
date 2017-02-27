@@ -5,7 +5,12 @@ class Favorites extends Component {
     static navigationOptions = {
         title: 'Favorites',
         header: ({ state, setParams }) => {
-            const right = <Button title="Add" onPress={() => this.props.navigation.navigate('Add')} />;
+            const right = (
+                <Button
+                    title="Add"
+                    onPress={() => this.props.navigation.navigate('Add')}
+                />
+            );
             return { right };
         }
     }
