@@ -9,13 +9,11 @@ class AppNavigatorState extends Component {
             <RootNavigator
                 navigation={addNavigationHelpers({
                     dispatch: this.props.dispatch,
-                    state: this.props.nav
+                    state: this.props.nav,
                 })}
             />
         );
     }
 }
 
-export default connect(state => ({
-    nav: state.nav
-}))(AppNavigatorState);
+export default connect(state => ({ nav: state.nav }))(AppNavigatorState);

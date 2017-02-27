@@ -3,7 +3,8 @@ import {
     View,
     Text,
     TouchableHighlight,
-    Image
+    Image,
+    Button
 } from 'react-native';
 import { connect } from 'react-redux';
 import AtoZListView from 'react-native-atoz-listview';
@@ -11,14 +12,38 @@ import { contactFetch } from '../../actions';
 import ContactStyles from '../../constants/ContactStyles';
 import { Search } from '../../components';
 
+function renderLeft(state) {
+    const { editing } = state.params || false;
+    return (
+        <Button
+            title={editing ? 'Done' : 'Edit'}
+            onPress={() => state.params.handleEdit()}
+        />
+    );
+}
+
 class Home extends Component {
 
     static navigationOptions = {
         title: 'Contacts',
+        header: ({ state, setParams }) => ({
+            left: renderLeft(state, setParams)
+        }),
     }
 
     componentWillMount() {
+        this.props.navigation.setParams({
+            editing: false,
+            handleEdit: this.handleEdit.bind(this),
+        });
         this.props.contactFetch();
+    }
+
+    handleEdit() {
+        this.props.navigation.setParams({
+            editing: !this.props.navigation.state.params.editing,
+        });
+        console.log(this);
     }
 
     renderSectionHeader = (sectionId, rowId) => {

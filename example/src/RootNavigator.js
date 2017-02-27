@@ -8,7 +8,12 @@ import ChatsNavigator from './navigators/ChatsNavigator';
 const RootNavigator = TabNavigator({
     Favorites: { screen: FavoritesNavigator },
     Calls: { screen: CallsNavigator },
-    Contacts: { screen: ContactsNavigator },
+    Contacts: {
+        screen: ContactsNavigator,
+        initialRouteParams: {
+            edit: false
+        }
+    },
     Chats: { screen: ChatsNavigator },
     Settings: { screen: SettingsNavigator },
 }, {

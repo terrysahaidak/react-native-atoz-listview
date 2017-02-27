@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Home from '../screens/Contacts/Home';
 
 const ContactsNavigator = StackNavigator({
-    ContactsHome: { screen: Home },
+    ContactsHome: { screen: Home, params: { edit: false } },
 });
 ContactsNavigator.navigationOptions = {
     tabBar: {
@@ -17,8 +17,8 @@ ContactsNavigator.navigationOptions = {
                     color={tintColor}
                 />
             );
-        }
-    }
+        },
+    },
 };
 
 export default ContactsNavigator;
