@@ -12,12 +12,17 @@ import { contactFetch } from '../../actions';
 import ContactStyles from '../../constants/ContactStyles';
 import { Search } from '../../components';
 
-function renderLeft(state) {
+function renderLeft(state, setParams) {
     const { editing } = state.params || false;
     return (
         <Button
             title={editing ? 'Done' : 'Edit'}
-            onPress={() => state.params.handleEdit()}
+            onPress={() => {
+                state.params.handleEdit();
+                setParams({
+                    editing: !editing
+                });
+            }}
         />
     );
 }
@@ -41,9 +46,6 @@ class Home extends Component {
     }
 
     handleEdit() {
-        this.props.navigation.setParams({
-            editing: !this.props.navigation.state.params.editing,
-        });
         console.log(this);
     }
 
