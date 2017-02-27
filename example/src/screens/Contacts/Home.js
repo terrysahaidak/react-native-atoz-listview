@@ -4,7 +4,6 @@ import {
     Text,
     TouchableHighlight,
     Image,
-    Button
 } from 'react-native';
 import { connect } from 'react-redux';
 import AtoZListView from 'react-native-atoz-listview';
@@ -15,15 +14,20 @@ import { Search } from '../../components';
 function renderLeft(state, setParams) {
     const { editing } = state.params || false;
     return (
-        <Button
-            title={editing ? 'Done' : 'Edit'}
+        <TouchableHighlight
+            style={{
+                paddingLeft: 10
+            }}
             onPress={() => {
                 state.params.handleEdit();
                 setParams({
                     editing: !editing
                 });
             }}
-        />
+        >
+            <Text>{editing ? 'Done' : 'Edit'}</Text>
+        </TouchableHighlight>
+
     );
 }
 

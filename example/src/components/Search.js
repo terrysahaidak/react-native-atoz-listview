@@ -6,13 +6,26 @@ import {
     TextInput,
     Animated,
     Dimensions,
-    Easing
+    Keyboard
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+const { width: contentWidth } = Dimensions.get('window');
+const containerHeight = 40;
+const middleHeight = 20;
+const middleWidth = contentWidth / 2;
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
 class Search extends Component {
     static propTypes = {
-        text: PropTypes.string,
+        titleSearch: PropTypes.string,
+        titleCancel: PropTypes.string,
+        onFocus: PropTypes.func,
+        onSearch: PropTypes.func,
+        onChangeText: PropTypes.func,
+        onCancel: PropTypes.func,
+        onDeleteText: PropTypes.func,
         style: PropTypes.object,
     }
 
@@ -20,58 +33,100 @@ class Search extends Component {
         super(props);
 
         this.state = {
-            focused: false,
-            focusAnimatedValue: new Animated.Value(middleWidth - 20),
-            cancelAnimatedValue: new Animated.Value(0),
+            iconSearchAnimated: new Animated.Value(middleWidth - 25),
+            iconDeleteAnimated: new Animated.Value(0),
+            inputFocusWidthAnimated: new Animated.Value(contentWidth - 10),
+            inputFocusPlaceholderAnimated: new Animated.Value(middleWidth - 15),
+            cancelAnimated: new Animated.Value(0),
             keyword: ''
         };
-        this.onChangeText = this.onChangeText.bind(this);
         this.onFocus = this.onFocus.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+        this.onChangeText = this.onChangeText.bind(this);
         this.onCancel = this.onCancel.bind(this);
+        this.onDeleteText = this.onDeleteText.bind(this);
+    }
+
+    onSearch = () => {
+        console.log('onSearch', this.state.keyword);
     }
 
     onChangeText = (text) => {
-        let showDeleteIcon = 0;
-        if (text.length > 0) {
-            showDeleteIcon = 1;
-        }
+        console.log(text);
         Animated.timing(
-            this.state.cancelAnimatedValue,
+            this.state.iconDeleteAnimated,
             {
-                toValue: showDeleteIcon,
+                toValue: (text.length > 0) ? 1 : 0,
                 duration: 200
             }
         ).start();
-        this.setState({
-            keyword: text
-        });
-        console.log('onChangeText', this.state.keyword);
+        this.setState({ keyword: text });
     }
 
     onFocus = () => {
-        Animated.timing(
-            this.state.focusAnimatedValue,
-            {
-                toValue: 20,
-                duration: 200
-            }
-        ).start();
-    }
-
-    onCancel = () => {
-        this.setState({
-            keyword: ''
-        });
         Animated.parallel([
             Animated.timing(
-                this.state.cancelAnimatedValue,
+                this.state.inputFocusWidthAnimated,
                 {
-                    toValue: 0,
+                    toValue: contentWidth - 70,
                     duration: 200
                 }
             ).start(),
             Animated.timing(
-                this.state.focusAnimatedValue,
+                this.state.inputFocusPlaceholderAnimated,
+                {
+                    toValue: 20,
+                    duration: 200
+                }
+            ).start(),
+            Animated.timing(
+                this.state.iconSearchAnimated,
+                {
+                    toValue: 10,
+                    duration: 200
+                }
+            ).start(),
+        ]);
+    }
+
+    onDeleteText = () => {
+        Animated.timing(
+            this.state.iconDeleteAnimated,
+            {
+                toValue: 0,
+                duration: 200
+            }
+        ).start();
+        this.setState({ keyword: '' });
+    }
+
+    onCancel = () => {
+        this.setState({ keyword: '' });
+        Keyboard.dismiss();
+        Animated.parallel([
+            Animated.timing(
+                this.state.inputFocusWidthAnimated,
+                {
+                    toValue: contentWidth - 10,
+                    duration: 200
+                }
+            ).start(),
+            Animated.timing(
+                this.state.inputFocusPlaceholderAnimated,
+                {
+                    toValue: middleWidth - 15,
+                    duration: 200
+                }
+            ).start(),
+            Animated.timing(
+                this.state.iconSearchAnimated,
+                {
+                    toValue: middleWidth - 25,
+                    duration: 200
+                }
+            ).start(),
+            Animated.timing(
+                this.state.iconDeleteAnimated,
                 {
                     toValue: 0,
                     duration: 200
@@ -80,99 +135,108 @@ class Search extends Component {
         ]);
     }
 
+    onKeyPress = (key) => {
+        if (key === 'Search') {
+            Keyboard.dismiss();
+        }
+    }
+
     render() {
         return (
-            <View ref="searchContainer" style={styles.container}>
-                <TextInput
+            <Animated.View
+                ref="searchContainer"
+                style={styles.container}
+            >
+                <AnimatedTextInput
                     style={[
-                        styles.input
+                        styles.input,
+                        {
+                            width: this.state.inputFocusWidthAnimated,
+                            paddingLeft: this.state.inputFocusPlaceholderAnimated
+                        }
                     ]}
                     value={this.state.keyword}
                     onChangeText={this.onChangeText}
-                    placeholder={this.props.text || 'Search'}
+                    placeholder={this.props.titleSearch || 'Search'}
                     onFocus={this.onFocus}
+                    onKeyPress={this.onKeyPress}
+                    onSubmitEditing={this.onSearch}
+                    autoCorrect={false}
+                    returnKeyType="search"
                 />
-                <TouchableWithoutFeedback
-                    onPress={this.onCancel}
-                >
-                    <Animated.View
+                <AnimatedIcon
+                    name="ios-search-outline"
+                    style={[
+                        styles.iconSearch,
+                        {
+                            left: this.state.iconSearchAnimated
+                        }
+                    ]}
+                />
+                <TouchableWithoutFeedback onPress={this.onDeleteText}>
+                    <AnimatedIcon
+                        name="ios-close-circle"
                         style={[
-                            styles.cancelContainer,
-                            {
-                                opacity: this.state.cancelAnimatedValue
-                            }
+                            styles.iconDelete,
+                            { opacity: this.state.iconDeleteAnimated }
                         ]}
-                    >
-                        <Icon
-                            name="ios-close-circle"
-                            color="grey"
-                            size={20}
-                        />
+                    />
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={this.onCancel}>
+                    <Animated.View style={styles.cancelButton}>
+                        <Text style={styles.cancelButtonText}>{this.props.titleCancel || 'Cancel'}</Text>
                     </Animated.View>
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback>
-                    <View>
-                        <Icon
-                            name="ios-search-outline"
-                            style={styles.labelIconStyle}
-                        />
-                    </View>
-                </TouchableWithoutFeedback>
-            </View >
+            </Animated.View >
         );
     }
 }
-
-const {width: contentWidth } = Dimensions.get('window');
-const containerHeight = 60;
-const middleHeight = 30;
-const middleWidth = contentWidth / 2;
 
 const styles = {
     container: {
         backgroundColor: 'grey',
         height: containerHeight,
-        flexDirection: 'row'
-    },
-    labelContainer: {
-        backgroundColor: '#ddd',
-        width: contentWidth,
-        height: containerHeight,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-    },
-    labelIconStyle: {
-        color: '#000',
-        paddingRight: 2,
-        fontSize: 12
-    },
-    cancelContainer: {
-        height: containerHeight,
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'center',
-        right: 20
-    },
-    labelTextStyle: {
-        color: '#000',
-        fontSize: 12
+        padding: 5,
+        overflow: 'hidden'
     },
     input: {
-        position: 'absolute',
-        height: 40,
-        width: contentWidth - 20,
-        marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10,
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingLeft: middleWidth - 20,
-        paddingRight: 10,
+        height: containerHeight - 10,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingRight: 20,
         borderColor: '#000',
         backgroundColor: '#f7f7f7',
         borderRadius: 5,
+        color: 'grey',
+        fontSize: 13
+    },
+    iconSearch: {
+        position: 'absolute',
+        fontSize: 14,
+        top: middleHeight - 7,
+        backgroundColor: 'transparent',
+        color: 'grey'
+    },
+    iconDelete: {
+        position: 'absolute',
+        right: 70,
+        fontSize: 14,
+        top: middleHeight - 7,
+        backgroundColor: 'transparent',
+        color: 'grey',
+    },
+    cancelButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
+        backgroundColor: 'transparent'
+    },
+    cancelButtonText: {
+        fontSize: 14,
+        color: '#0173fa'
     }
 };
 
