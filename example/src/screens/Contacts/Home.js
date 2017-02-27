@@ -31,7 +31,8 @@ class Home extends Component {
         }),
     }
 
-    componentWillMount() {
+    constructor(props) {
+        super(props);
         this.props.navigation.setParams({
             editing: false,
             handleEdit: this.handleEdit.bind(this),
