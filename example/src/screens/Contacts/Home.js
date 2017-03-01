@@ -84,6 +84,14 @@ class Home extends Component {
         return <View style={ContactStyles.rowSeparator} key={`${sectionId}${rowId}`} />;
     }
 
+    renderHeader = () => {
+        return (
+            <View style={ContactStyles.headerContainer}>
+                <Text style={ContactStyles.headerText}>My Number: +8498-280-8065</Text>
+            </View>
+        );
+    }
+
     renderFooter = () => {
         return (
             <View style={ContactStyles.footerContainer}>
@@ -95,7 +103,18 @@ class Home extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Search />
+                <Search
+                    titleSearch="Tìm kiếm"
+                    titleCancel="Huỷ"
+                    onSearch={(text) => console.log('onSearch outside', text)}
+                    onFocus={(text) => console.log('focused outside', text)}
+                    onChangeText={(text) => console.log('onChangeText outside', text)}
+                    onDelete={() => console.log('onDelete outside')}
+                    onCancel={() => console.log('onCancel outside')}
+                    style={{
+                        backgroundColor: 'green'
+                    }}
+                />
                 <AtoZListView
                     enableEmptySections
                     data={this.props.contacts}
@@ -104,6 +123,8 @@ class Home extends Component {
                     renderSectionHeader={this.renderSectionHeader}
                     sectionHeaderHeight={40}
                     renderSeparator={this.renderSeparator}
+                    renderHeader={this.renderHeader}
+                    headerHeight={50}
                     renderFooter={this.renderFooter}
                     footerHeight={50}
                 />

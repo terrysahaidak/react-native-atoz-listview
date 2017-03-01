@@ -38,6 +38,18 @@ export default {
         fontSize: 18,
         fontWeight: '300'
     },
+    headerContainer: {
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        backgroundColor: '#f7f7f7',
+        paddingLeft: 10,
+    },
+    headerText: {
+        fontSize: 18,
+        fontWeight: '200',
+        color: 'rgba(0, 0, 0, 0.6)'
+    },
     footerContainer: {
         height: 50,
         justifyContent: 'center',

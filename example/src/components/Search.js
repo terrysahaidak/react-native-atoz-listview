@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import {
-    View,
     Text,
     TouchableWithoutFeedback,
     TextInput,
@@ -25,79 +24,94 @@ class Search extends Component {
         onSearch: PropTypes.func,
         onChangeText: PropTypes.func,
         onCancel: PropTypes.func,
-        onDeleteText: PropTypes.func,
-        style: PropTypes.object,
+        onDelete: PropTypes.func,
     }
 
     constructor(props) {
         super(props);
-
         this.state = {
-            iconSearchAnimated: new Animated.Value(middleWidth - 25),
-            iconDeleteAnimated: new Animated.Value(0),
-            inputFocusWidthAnimated: new Animated.Value(contentWidth - 10),
-            inputFocusPlaceholderAnimated: new Animated.Value(middleWidth - 15),
-            cancelAnimated: new Animated.Value(0),
             keyword: ''
         };
+
+        /**
+         * Animated values
+         */
+        this.iconSearchAnimated = new Animated.Value(middleWidth - 25);
+        this.iconDeleteAnimated = new Animated.Value(0);
+        this.inputFocusWidthAnimated = new Animated.Value(contentWidth - 10);
+        this.inputFocusPlaceholderAnimated = new Animated.Value(middleWidth - 15);
+        this.cancelAnimated = new Animated.Value(0);
+
+        /**
+         * functions
+         */
         this.onFocus = this.onFocus.bind(this);
         this.onSearch = this.onSearch.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
         this.onCancel = this.onCancel.bind(this);
-        this.onDeleteText = this.onDeleteText.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+
+        /**
+         * local variables
+         */
+        this.titleSearch = this.props.titleSearch || 'Search';
+        this.titleCancel = this.props.titleCancel || 'Cancel';
     }
 
     onSearch = () => {
-        console.log('onSearch', this.state.keyword);
+        Keyboard.dismiss();
+        this.props.onSearch && this.props.onSearch(this.state.keyword);
     }
 
     onChangeText = (text) => {
-        console.log(text);
+        this.setState({ keyword: text });
         Animated.timing(
-            this.state.iconDeleteAnimated,
+            this.iconDeleteAnimated,
             {
                 toValue: (text.length > 0) ? 1 : 0,
                 duration: 200
             }
         ).start();
-        this.setState({ keyword: text });
+        this.props.onChangeText && this.props.onChangeText(text);
     }
 
     onFocus = () => {
         Animated.parallel([
             Animated.timing(
-                this.state.inputFocusWidthAnimated,
+                this.inputFocusWidthAnimated,
                 {
                     toValue: contentWidth - 70,
                     duration: 200
                 }
             ).start(),
             Animated.timing(
-                this.state.inputFocusPlaceholderAnimated,
+                this.inputFocusPlaceholderAnimated,
                 {
                     toValue: 20,
                     duration: 200
                 }
             ).start(),
             Animated.timing(
-                this.state.iconSearchAnimated,
+                this.iconSearchAnimated,
                 {
                     toValue: 10,
                     duration: 200
                 }
             ).start(),
         ]);
+        this.props.onFocus && this.props.onFocus(this.state.keyword);
     }
 
-    onDeleteText = () => {
+    onDelete = () => {
         Animated.timing(
-            this.state.iconDeleteAnimated,
+            this.iconDeleteAnimated,
             {
                 toValue: 0,
                 duration: 200
             }
         ).start();
         this.setState({ keyword: '' });
+        this.props.onDelete && this.props.onDelete();
     }
 
     onCancel = () => {
@@ -105,40 +119,35 @@ class Search extends Component {
         Keyboard.dismiss();
         Animated.parallel([
             Animated.timing(
-                this.state.inputFocusWidthAnimated,
+                this.inputFocusWidthAnimated,
                 {
                     toValue: contentWidth - 10,
                     duration: 200
                 }
             ).start(),
             Animated.timing(
-                this.state.inputFocusPlaceholderAnimated,
+                this.inputFocusPlaceholderAnimated,
                 {
                     toValue: middleWidth - 15,
                     duration: 200
                 }
             ).start(),
             Animated.timing(
-                this.state.iconSearchAnimated,
+                this.iconSearchAnimated,
                 {
                     toValue: middleWidth - 25,
                     duration: 200
                 }
             ).start(),
             Animated.timing(
-                this.state.iconDeleteAnimated,
+                this.iconDeleteAnimated,
                 {
                     toValue: 0,
                     duration: 200
                 }
             ).start(),
         ]);
-    }
-
-    onKeyPress = (key) => {
-        if (key === 'Search') {
-            Keyboard.dismiss();
-        }
+        this.props.onCancel && this.props.onCancel();
     }
 
     render() {
@@ -151,15 +160,14 @@ class Search extends Component {
                     style={[
                         styles.input,
                         {
-                            width: this.state.inputFocusWidthAnimated,
-                            paddingLeft: this.state.inputFocusPlaceholderAnimated
+                            width: this.inputFocusWidthAnimated,
+                            paddingLeft: this.inputFocusPlaceholderAnimated
                         }
                     ]}
                     value={this.state.keyword}
                     onChangeText={this.onChangeText}
-                    placeholder={this.props.titleSearch || 'Search'}
+                    placeholder={this.titleSearch}
                     onFocus={this.onFocus}
-                    onKeyPress={this.onKeyPress}
                     onSubmitEditing={this.onSearch}
                     autoCorrect={false}
                     returnKeyType="search"
@@ -169,22 +177,22 @@ class Search extends Component {
                     style={[
                         styles.iconSearch,
                         {
-                            left: this.state.iconSearchAnimated
+                            left: this.iconSearchAnimated
                         }
                     ]}
                 />
-                <TouchableWithoutFeedback onPress={this.onDeleteText}>
+                <TouchableWithoutFeedback onPress={this.onDelete}>
                     <AnimatedIcon
                         name="ios-close-circle"
                         style={[
                             styles.iconDelete,
-                            { opacity: this.state.iconDeleteAnimated }
+                            { opacity: this.iconDeleteAnimated }
                         ]}
                     />
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this.onCancel}>
                     <Animated.View style={styles.cancelButton}>
-                        <Text style={styles.cancelButtonText}>{this.props.titleCancel || 'Cancel'}</Text>
+                        <Text style={styles.cancelButtonText}>{this.titleCancel}</Text>
                     </Animated.View>
                 </TouchableWithoutFeedback>
             </Animated.View >
