@@ -3,7 +3,7 @@ import {
     View,
     Text,
     TouchableHighlight,
-    Image,
+    Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import AtoZListView from 'react-native-atoz-listview';
@@ -36,7 +36,7 @@ class Home extends Component {
     static navigationOptions = {
         title: 'Contacts',
         header: ({ state, setParams }) => ({
-            left: renderLeft(state, setParams)
+            left: renderLeft(state, setParams),
         }),
     }
 
@@ -102,18 +102,15 @@ class Home extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View
+                style={{ flex: 1 }}
+            >
                 <Search
                     titleSearch="Tìm kiếm"
                     titleCancel="Huỷ"
                     onSearch={(text) => console.log('onSearch outside', text)}
-                    onFocus={(text) => console.log('focused outside', text)}
                     onChangeText={(text) => console.log('onChangeText outside', text)}
-                    onDelete={() => console.log('onDelete outside')}
-                    onCancel={() => console.log('onCancel outside')}
-                    style={{
-                        backgroundColor: 'green'
-                    }}
+                    onDelete={() => console.log('canceled')}
                 />
                 <AtoZListView
                     enableEmptySections

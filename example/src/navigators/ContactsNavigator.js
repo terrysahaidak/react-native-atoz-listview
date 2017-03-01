@@ -5,7 +5,9 @@ import Home from '../screens/Contacts/Home';
 
 const ContactsNavigator = StackNavigator({
     ContactsHome: { screen: Home },
-});
+}, {
+        mode: 'modal',
+    });
 ContactsNavigator.navigationOptions = {
     tabBar: {
         label: 'Contacts',
