@@ -3,14 +3,17 @@ import {
     View,
     Text,
     TouchableHighlight,
-    Image
+    Image,
+    Button,
+    Animated
 } from 'react-native';
 import { connect } from 'react-redux';
+import Search from 'react-native-search-box';
 import AtoZListView from 'react-native-atoz-listview';
 import { contactFetch } from '../../actions';
 import ContactStyles from '../../constants/ContactStyles';
-import { Search } from '../../components';
 
+const AnimatedAtoZListView = Animated.createAnimatedComponent(AtoZListView);
 function renderLeft(state, setParams) {
     const { editing } = state.params || false;
     return (
@@ -46,7 +49,11 @@ class Home extends Component {
             editing: false,
             handleEdit: this.handleEdit.bind(this),
         });
-        this.props.contactFetch();
+        this.atoZAnimated = new Animated.Value(0);
+    }
+
+    async componentWillMount() {
+        await this.props.contactFetch();
     }
 
     handleEdit() {
@@ -100,19 +107,71 @@ class Home extends Component {
         );
     }
 
+    beforeFocus = () => {
+        return new Promise((resolve, reject) => {
+            Animated.timing(
+                this.atoZAnimated,
+                {
+                    toValue: -38,
+                    duration: 300
+                }
+            ).start(() => {
+                console.log('Animation completed');
+                resolve(true);
+            });
+        });
+    }
+
+    afterFocus = () => {
+        return new Promise((resolve, reject) => {
+            console.log('afterFocus');
+            resolve(true);
+        });
+    }
+
+    onSearchCancel = () => {
+        Animated.timing(
+            this.atoZAnimated,
+            {
+                toValue: 0,
+                duration: 200
+            }
+        ).start();
+    }
+
+    onSearchPressed = (text) => {
+        Animated.timing(
+            this.atoZAnimated,
+            {
+                toValue: 0,
+                duration: 200
+            }
+        ).start();
+        console.log('onSearchPressed', text);
+    }
+
+    onChangeText = (text) => {
+        console.log('onSearchChange', text);
+    }
+
     render() {
         return (
             <View
                 style={{ flex: 1 }}
             >
                 <Search
+                    ref="search_bar"
                     titleSearch="Tìm kiếm"
                     titleCancel="Huỷ"
-                    onSearch={(text) => console.log('onSearch outside', text)}
-                    onChangeText={(text) => console.log('onChangeText outside', text)}
-                    onDelete={() => console.log('canceled')}
+                    onSearch={this.onSearchPressed}
+                    onChangeText={this.onChangeText}
+                    onDelete={() => console.log('onDelete')}
+                    beforeFocus={this.beforeFocus}
+                    afterFocus={this.afterFocus}
+                    onCancel={this.onSearchCancel}
                 />
-                <AtoZListView
+                <Button title="Focus and set default keyword" onPress={() => this.refs.search_bar.focus('New keyword')} />
+                <AnimatedAtoZListView
                     enableEmptySections
                     data={this.props.contacts}
                     renderRow={this.renderRow}
@@ -124,6 +183,9 @@ class Home extends Component {
                     headerHeight={50}
                     renderFooter={this.renderFooter}
                     footerHeight={50}
+                    style={{
+                        top: this.atoZAnimated
+                    }}
                 />
             </View>
         );
