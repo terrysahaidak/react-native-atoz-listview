@@ -7,7 +7,7 @@ export default {
         alignItems: 'center',
         paddingLeft: 15,
     },
-    rowUnderlayColor: '#f7f7f7',
+    rowUnderlayColor: 'grey',
     rowTextContainer: {
         paddingLeft: 10
     },

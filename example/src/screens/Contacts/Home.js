@@ -72,6 +72,7 @@ class Home extends Component {
         return (
             <TouchableHighlight
                 underlayColor={ContactStyles.rowUnderlayColor}
+                onPress={() => this.refs.search_bar.focus(item.name)}
             >
                 <View style={ContactStyles.rowContainer}>
                     <Image
@@ -109,23 +110,22 @@ class Home extends Component {
 
     beforeFocus = () => {
         return new Promise((resolve, reject) => {
-            Animated.timing(
-                this.atoZAnimated,
-                {
-                    toValue: -38,
-                    duration: 300
-                }
-            ).start(() => {
-                console.log('Animation completed');
-                resolve(true);
-            });
+            console.log('beforeFocus');
+            resolve();
+        });
+    }
+
+    onFocus = (text) => {
+        return new Promise((resolve, reject) => {
+            console.log('onFocus', text);
+            resolve();
         });
     }
 
     afterFocus = () => {
         return new Promise((resolve, reject) => {
             console.log('afterFocus');
-            resolve(true);
+            resolve();
         });
     }
 
@@ -167,10 +167,14 @@ class Home extends Component {
                     onChangeText={this.onChangeText}
                     onDelete={() => console.log('onDelete')}
                     beforeFocus={this.beforeFocus}
+                    onFocus={this.onFocus}
                     afterFocus={this.afterFocus}
                     onCancel={this.onSearchCancel}
+                    backgroundColor="purple"
+                    placeholderTextColor="#9a119a"
+                    tintColorSearch="#9a119a"
+                    tintColorDelete="#9a119a"
                 />
-                <Button title="Focus and set default keyword" onPress={() => this.refs.search_bar.focus('New keyword')} />
                 <AnimatedAtoZListView
                     enableEmptySections
                     data={this.props.contacts}
