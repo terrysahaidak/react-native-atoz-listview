@@ -1,9 +1,5 @@
-'use strict';
-
-import React, {
-  Component,
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactNative, {
   ListView,
   StyleSheet,
@@ -20,7 +16,6 @@ import CellWrapper from './CellWrapper';
 const { UIManager } = NativeModules;
 
 export default class SelectableSectionsListView extends Component {
-
   constructor(props, context) {
     super(props, context);
 
@@ -47,11 +42,21 @@ export default class SelectableSectionsListView extends Component {
   }
 
   componentWillMount() {
-    if (this.props.renderHeader !== undefined && this.props.headerHeight === undefined) {
-      throw new Error('You have to implement both renderHeader and headerHeight');
+    if (
+      this.props.renderHeader !== undefined &&
+      this.props.headerHeight === undefined
+    ) {
+      throw new Error(
+        'You have to implement both renderHeader and headerHeight'
+      );
     }
-    if (this.props.renderFooter !== undefined && this.props.footerHeight === undefined) {
-      throw new Error('You have to implement both renderFooter and footerHeight');
+    if (
+      this.props.renderFooter !== undefined &&
+      this.props.footerHeight === undefined
+    ) {
+      throw new Error(
+        'You have to implement both renderFooter and footerHeight'
+      );
     }
     this.calculateTotalHeight();
   }
@@ -63,9 +68,12 @@ export default class SelectableSectionsListView extends Component {
   componentDidMount() {
     // push measuring into the next tick
     setTimeout(() => {
-      UIManager.measure(ReactNative.findNodeHandle(this.refs.view), (x, y, w, h) => {
-        this.containerHeight = h;
-      });
+      UIManager.measure(
+        ReactNative.findNodeHandle(this.refs.view),
+        (x, y, w, h) => {
+          this.containerHeight = h;
+        }
+      );
     }, 0);
     // trick to implement contentOffset on Android
     if (this.props.contentOffset !== undefined && Platform.OS === 'android') {
@@ -89,17 +97,16 @@ export default class SelectableSectionsListView extends Component {
     }
 
     this.sectionItemCount = {};
-    this.totalHeight = Object.keys(data)
-      .reduce((carry, key) => {
-        var itemCount = data[key].length;
-        carry += itemCount * this.props.rowHeight;
-        carry += this.props.sectionHeaderHeight;
-        carry += this.props.footerHeight || 0;
+    this.totalHeight = Object.keys(data).reduce((carry, key) => {
+      var itemCount = data[key].length;
+      carry += itemCount * this.props.rowHeight;
+      carry += this.props.sectionHeaderHeight;
+      carry += this.props.footerHeight || 0;
 
-        this.sectionItemCount[key] = itemCount;
+      this.sectionItemCount[key] = itemCount;
 
-        return carry;
-      }, 0);
+      return carry;
+    }, 0);
   }
 
   updateTagInSectionMap(tag, section) {
@@ -119,7 +126,7 @@ export default class SelectableSectionsListView extends Component {
       const rowHeight = this.props.rowHeight;
       let sectionHeaderHeight = this.props.sectionHeaderHeight;
       let keys = Object.keys(this.props.data);
-      if (typeof (this.props.compareFunction) === 'function') {
+      if (typeof this.props.compareFunction === 'function') {
         keys = keys.sort(this.props.compareFunction);
       }
       const index = keys.indexOf(section);
@@ -130,29 +137,34 @@ export default class SelectableSectionsListView extends Component {
       }
 
       sectionHeaderHeight *= index;
-      y += (numcells * rowHeight) + sectionHeaderHeight;
+      y += numcells * rowHeight + sectionHeaderHeight;
       const maxY = this.totalHeight - (this.containerHeight + headerHeight);
       y = y > maxY ? maxY : y;
 
       this.refs.listview.scrollTo({ x: 0, y, animated: true });
     } else {
-      UIManager.measureLayout(this.cellTagMap[section], ReactNative.findNodeHandle(this.refs.listview), () => { }, (xx, yy, ww, hh) => {
-        y = yy - this.props.sectionHeaderHeight;
-        this.refs.listview.scrollTo({ x: 0, y, animated: true });
-      });
+      UIManager.measureLayout(
+        this.cellTagMap[section],
+        ReactNative.findNodeHandle(this.refs.listview),
+        () => {},
+        (xx, yy, ww, hh) => {
+          y = yy - this.props.sectionHeaderHeight;
+          this.refs.listview.scrollTo({ x: 0, y, animated: true });
+        }
+      );
     }
 
     this.props.onScrollToSection && this.props.onScrollToSection(section);
   }
 
   renderSectionHeader(sectionData, sectionId) {
-    const updateTag = this.props.useDynamicHeights ?
-      this.updateTagInSectionMap :
-      null;
+    const updateTag = this.props.useDynamicHeights
+      ? this.updateTagInSectionMap
+      : null;
 
-    const title = this.props.getSectionTitle ?
-      this.props.getSectionTitle(sectionId) :
-      sectionId;
+    const title = this.props.getSectionTitle
+      ? this.props.getSectionTitle(sectionId)
+      : sectionId;
 
     return (
       <SectionHeader
@@ -213,14 +225,14 @@ export default class SelectableSectionsListView extends Component {
     let dataSource;
     let sections = Object.keys(data);
 
-    if (typeof (this.props.compareFunction) === "function") {
+    if (typeof this.props.compareFunction === 'function') {
       sections = sections.sort(this.props.compareFunction);
     }
 
     if (dataIsArray) {
       dataSource = this.state.dataSource.cloneWithRows(data);
     } else {
-      sectionList = !this.props.hideSectionList ?
+      sectionList = !this.props.hideSectionList ? (
         <SectionList
           style={this.props.sectionListStyle}
           onSectionSelect={this.scrollToSection}
@@ -228,28 +240,30 @@ export default class SelectableSectionsListView extends Component {
           data={data}
           getSectionListTitle={this.props.getSectionListTitle}
           component={this.props.sectionListItem}
-        /> :
-        null;
+        />
+      ) : null;
 
-      renderSectionHeader = this.props.renderSectionHeader ? this.props.renderSectionHeader : this.renderSectionHeader;
-      dataSource = this.state.dataSource.cloneWithRowsAndSections(data, sections);
+      renderSectionHeader = this.props.renderSectionHeader
+        ? this.props.renderSectionHeader
+        : this.renderSectionHeader;
+      dataSource = this.state.dataSource.cloneWithRowsAndSections(
+        data,
+        sections
+      );
     }
 
     const props = merge({}, this.props, {
       onScroll: this.onScroll,
       onScrollAnimationEnd: this.onScrollAnimationEnd,
       dataSource,
-      renderSectionHeader,
+      renderSectionHeader
     });
 
     props.style = void 0;
 
     return (
       <View ref="view" style={[styles.container, this.props.style]}>
-        <ListView
-          ref="listview"
-          {...props}
-        />
+        <ListView ref="listview" {...props} />
         {sectionList}
       </View>
     );
@@ -264,17 +278,14 @@ const styles = StyleSheet.create({
 
 const stylesheetProp = PropTypes.oneOfType([
   PropTypes.number,
-  PropTypes.object,
+  PropTypes.object
 ]);
 
 SelectableSectionsListView.propTypes = {
   /**
    * The data to render in the listview
    */
-  data: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.object,
-  ]).isRequired,
+  data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 
   /**
    * Whether to show the section listing or not
@@ -360,5 +371,5 @@ SelectableSectionsListView.propTypes = {
   /**
    * Styles to pass to the section list container
    */
-  sectionListStyle: stylesheetProp,
+  sectionListStyle: stylesheetProp
 };
