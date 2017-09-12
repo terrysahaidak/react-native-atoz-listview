@@ -1,17 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactNative, {
-  ListView,
-  StyleSheet,
-  View,
-  NativeModules,
-  Platform
-} from 'react-native';
+import ReactNative, { ListView, StyleSheet, View, NativeModules, Platform } from 'react-native';
 import merge from 'merge';
 
 import SectionHeader from './SectionHeader';
 import SectionList from './SectionList';
-import CellWrapper from './CellWrapper';
+// import CellWrapper from './CellWrapper';
 
 const { UIManager } = NativeModules;
 
@@ -42,38 +36,21 @@ export default class SelectableSectionsListView extends React.PureComponent {
   }
 
   componentWillMount() {
-    if (
-      this.props.renderHeader !== undefined &&
-      this.props.headerHeight === undefined
-    ) {
-      throw new Error(
-        'You have to implement both renderHeader and headerHeight'
-      );
+    if (this.props.renderHeader !== undefined && this.props.headerHeight === undefined) {
+      throw new Error('You have to implement both renderHeader and headerHeight');
     }
-    if (
-      this.props.renderFooter !== undefined &&
-      this.props.footerHeight === undefined
-    ) {
-      throw new Error(
-        'You have to implement both renderFooter and footerHeight'
-      );
+    if (this.props.renderFooter !== undefined && this.props.footerHeight === undefined) {
+      throw new Error('You have to implement both renderFooter and footerHeight');
     }
     this.calculateTotalHeight();
-  }
-
-  componentWillUnmount() {
-    this.contentOffsetHandler && clearTimeout(this.contentOffsetHandler);
   }
 
   componentDidMount() {
     // push measuring into the next tick
     setTimeout(() => {
-      UIManager.measure(
-        ReactNative.findNodeHandle(this.refs.view),
-        (x, y, w, h) => {
-          this.containerHeight = h;
-        }
-      );
+      UIManager.measure(ReactNative.findNodeHandle(this.refs.view), (x, y, w, h) => {
+        this.containerHeight = h;
+      });
     }, 0);
     // trick to implement contentOffset on Android
     if (this.props.contentOffset !== undefined && Platform.OS === 'android') {
@@ -89,6 +66,10 @@ export default class SelectableSectionsListView extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.contentOffsetHandler && clearTimeout(this.contentOffsetHandler);
+  }
+
   calculateTotalHeight(data) {
     data = data || this.props.data;
 
@@ -98,7 +79,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
 
     this.sectionItemCount = {};
     this.totalHeight = Object.keys(data).reduce((carry, key) => {
-      var itemCount = data[key].length;
+      const itemCount = data[key].length;
       carry += itemCount * this.props.rowHeight;
       carry += this.props.sectionHeaderHeight;
       carry += this.props.footerHeight || 0;
@@ -132,7 +113,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
       const index = keys.indexOf(section);
 
       let numcells = 0;
-      for (var i = 0; i < index; i++) {
+      for (let i = 0; i < index; i++) {
         numcells += this.props.data[keys[i]].length;
       }
 
@@ -158,13 +139,9 @@ export default class SelectableSectionsListView extends React.PureComponent {
   }
 
   renderSectionHeader(sectionData, sectionId) {
-    const updateTag = this.props.useDynamicHeights
-      ? this.updateTagInSectionMap
-      : null;
+    const updateTag = this.props.useDynamicHeights ? this.updateTagInSectionMap : null;
 
-    const title = this.props.getSectionTitle
-      ? this.props.getSectionTitle(sectionId)
-      : sectionId;
+    const title = this.props.getSectionTitle ? this.props.getSectionTitle(sectionId) : sectionId;
 
     return (
       <SectionHeader
@@ -246,10 +223,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
       renderSectionHeader = this.props.renderSectionHeader
         ? this.props.renderSectionHeader
         : this.renderSectionHeader;
-      dataSource = this.state.dataSource.cloneWithRowsAndSections(
-        data,
-        sections
-      );
+      dataSource = this.state.dataSource.cloneWithRowsAndSections(data, sections);
     }
 
     const props = merge({}, this.props, {
@@ -276,10 +250,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const stylesheetProp = PropTypes.oneOfType([
-  PropTypes.number,
-  PropTypes.object
-]);
+const stylesheetProp = PropTypes.oneOfType([PropTypes.number, PropTypes.object]);
 
 SelectableSectionsListView.propTypes = {
   /**

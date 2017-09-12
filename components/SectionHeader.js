@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactNative, { StyleSheet, View, Text } from 'react-native';
+import ReactNative, { View, Text } from 'react-native';
 
 export default class SectionHeader extends React.PureComponent {
   static propTypes = {
@@ -22,10 +22,7 @@ export default class SectionHeader extends React.PureComponent {
 
   componentDidMount() {
     this.props.updateTag &&
-      this.props.updateTag(
-        ReactNative.findNodeHandle(this.refs.view),
-        this.props.sectionId
-      );
+      this.props.updateTag(ReactNative.findNodeHandle(this.refs.view), this.props.sectionId);
   }
 
   render() {
@@ -39,17 +36,3 @@ export default class SectionHeader extends React.PureComponent {
     return <View ref="view">{content}</View>;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f8f8f8',
-    borderTopWidth: 1,
-    borderTopColor: '#ececec'
-  },
-  text: {
-    fontWeight: '700',
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 2
-  }
-});

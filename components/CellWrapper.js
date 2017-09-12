@@ -22,10 +22,7 @@ export default class CellWrapper extends React.PureComponent {
 
   componentDidMount() {
     this.props.updateTag &&
-      this.props.updateTag(
-        ReactNative.findNodeHandle(this.refs.view),
-        this.props.sectionId
-      );
+      this.props.updateTag(ReactNative.findNodeHandle(this.refs.view), this.props.sectionId);
   }
 
   render() {
