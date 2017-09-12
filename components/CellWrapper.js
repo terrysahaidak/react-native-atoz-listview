@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactNative, { View } from 'react-native';
 
-export default class CellWrapper React.PureComponent {
+export default class CellWrapper extends React.PureComponent {
   static propTypes = {
     /**
      * The id of the section
      */
     sectionId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  
+
     /**
      * A component to render for each cell
      */
     component: PropTypes.func.isRequired,
-  
+
     /**
      * A function used to propagate the root nodes handle back to the parent
      */
@@ -37,4 +37,3 @@ export default class CellWrapper React.PureComponent {
     );
   }
 }
-

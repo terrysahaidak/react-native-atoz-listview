@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactNative, { StyleSheet, View, Text } from 'react-native';
 
-export default class SectionHeader React.PureComponent {
+export default class SectionHeader extends React.PureComponent {
   static propTypes = {
     /**
      * The id of the section
      */
     sectionId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  
+
     /**
      * A component to render for each section item
      */
     component: PropTypes.func,
-  
+
     /**
      * A function used to propagate the root nodes handle back to the parent
      */
@@ -53,4 +53,3 @@ const styles = StyleSheet.create({
     paddingLeft: 2
   }
 });
-
