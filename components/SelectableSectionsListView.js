@@ -15,7 +15,7 @@ import CellWrapper from './CellWrapper';
 
 const { UIManager } = NativeModules;
 
-export default class SelectableSectionsListView extends Component {
+export default class SelectableSectionsListView extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
 
