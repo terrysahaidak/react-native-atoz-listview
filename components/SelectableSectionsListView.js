@@ -212,6 +212,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
       sectionList = !this.props.hideSectionList ? (
         <SectionList
           style={this.props.sectionListStyle}
+          textStyle={this.props.sectionListTextStyle}
           onSectionSelect={this.scrollToSection}
           sections={sections}
           data={data}
@@ -342,5 +343,10 @@ SelectableSectionsListView.propTypes = {
   /**
    * Styles to pass to the section list container
    */
-  sectionListStyle: stylesheetProp
+  sectionListStyle: stylesheetProp,
+  
+  /**
+   * Styles to pass to the section list container text
+   */
+  sectionListTextStyle: stylesheetProp,
 };
