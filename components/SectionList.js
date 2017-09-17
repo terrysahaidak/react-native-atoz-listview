@@ -111,7 +111,7 @@ export default class SectionList extends React.PureComponent {
         <SectionComponent sectionId={section} title={title} />
       ) : (
         <View style={styles.item}>
-          <Text style={textStyle}>{title}</Text>
+          <Text style={[textStyle, this.props.textStyle]}>{title}</Text>
         </View>
       );
 
