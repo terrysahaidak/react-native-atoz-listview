@@ -130,7 +130,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
         () => {},
         (xx, yy, ww, hh) => {
           y = yy - this.props.sectionHeaderHeight;
-          this.refs.listview..getScrollResponder().scrollTo({ x: 0, y, animated: true });
+          this.refs.listview.getScrollResponder().scrollTo({ x: 0, y, animated: true });
         }
       );
     }
