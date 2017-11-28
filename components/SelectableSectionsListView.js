@@ -55,7 +55,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
     // trick to implement contentOffset on Android
     if (this.props.contentOffset !== undefined && Platform.OS === 'android') {
       this.contentOffsetHandler = setTimeout(() => {
-        this.refs.listview.scrollTo(this.props.contentOffset);
+        this.refs.listview.getScrollResponder().scrollTo(this.props.contentOffset);
       }, 0);
     }
   }
@@ -122,7 +122,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
       const maxY = this.totalHeight - (this.containerHeight + headerHeight);
       y = y > maxY ? maxY : y;
 
-      this.refs.listview.scrollTo({ x: 0, y, animated: true });
+      this.refs.listview.getScrollResponder().scrollTo({ x: 0, y, animated: true });
     } else {
       UIManager.measureLayout(
         this.cellTagMap[section],
@@ -130,7 +130,7 @@ export default class SelectableSectionsListView extends React.PureComponent {
         () => {},
         (xx, yy, ww, hh) => {
           y = yy - this.props.sectionHeaderHeight;
-          this.refs.listview.scrollTo({ x: 0, y, animated: true });
+          this.refs.listview..getScrollResponder().scrollTo({ x: 0, y, animated: true });
         }
       );
     }
