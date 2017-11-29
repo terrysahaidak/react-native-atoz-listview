@@ -13,11 +13,13 @@ export default class SelectableSectionsListView extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
 
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (row1, row2) => row1 !== row2,
+      sectionHeaderHasChanged: (prev, next) => prev !== next
+    });
+
     this.state = {
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2,
-        sectionHeaderHasChanged: (prev, next) => prev !== next
-      }),
+      dataSource: dataSource.cloneWithRowsAndSections(props.data, Object.keys(props.data)),
       offsetY: 0
     };
 
@@ -63,6 +65,11 @@ export default class SelectableSectionsListView extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.data && nextProps.data !== this.props.data) {
       this.calculateTotalHeight(nextProps.data);
+
+      const sections = Object.keys(nextProps.data);
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRowsAndSections(nextProps.data, sections)
+      })
     }
   }
 
@@ -195,42 +202,25 @@ export default class SelectableSectionsListView extends React.PureComponent {
   }
 
   render() {
-    const { data } = this.props;
-    const dataIsArray = Array.isArray(data);
-    let sectionList;
-    let renderSectionHeader;
-    let dataSource;
-    let sections = Object.keys(data);
-
-    if (typeof this.props.compareFunction === 'function') {
-      sections = sections.sort(this.props.compareFunction);
-    }
-
-    if (dataIsArray) {
-      dataSource = this.state.dataSource.cloneWithRows(data);
-    } else {
-      sectionList = !this.props.hideSectionList ? (
-        <SectionList
-          style={this.props.sectionListStyle}
-          textStyle={this.props.sectionListTextStyle}
-          onSectionSelect={this.scrollToSection}
-          sections={sections}
-          data={data}
-          getSectionListTitle={this.props.getSectionListTitle}
-          component={this.props.sectionListItem}
-        />
-      ) : null;
-
-      renderSectionHeader = this.props.renderSectionHeader
-        ? this.props.renderSectionHeader
-        : this.renderSectionHeader;
-      dataSource = this.state.dataSource.cloneWithRowsAndSections(data, sections);
-    }
+    const sectionList = !this.props.hideSectionList ? (
+      <SectionList
+        style={this.props.sectionListStyle}
+        textStyle={this.props.sectionListTextStyle}
+        onSectionSelect={this.scrollToSection}
+        sections={Object.keys(this.props.data)}
+        data={this.props.data}
+        getSectionListTitle={this.props.getSectionListTitle}
+        component={this.props.sectionListItem}
+      />
+    ) : null;
+    const renderSectionHeader = this.props.renderSectionHeader
+      ? this.props.renderSectionHeader
+      : this.renderSectionHeader;
 
     const props = merge({}, this.props, {
       onScroll: this.onScroll,
       onScrollAnimationEnd: this.onScrollAnimationEnd,
-      dataSource,
+      dataSource: this.state.dataSource,
       renderSectionHeader
     });
 
@@ -344,7 +334,7 @@ SelectableSectionsListView.propTypes = {
    * Styles to pass to the section list container
    */
   sectionListStyle: stylesheetProp,
-  
+
   /**
    * Styles to pass to the section list container text
    */
